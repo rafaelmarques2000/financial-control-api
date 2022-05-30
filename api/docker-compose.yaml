@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  db_postgres_sql:
+    image: postgres:12
+    tty: true
+    ports:
+      - "5438:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=financial_api
+      - PGDATA=/var/lib/postgresql/data/db-files/
+    networks:
+      - api_network
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  api_network:
+    name: network_api
+    driver: bridge
