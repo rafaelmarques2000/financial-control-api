@@ -4,6 +4,7 @@ import com.financial.api.domain.transaction.model.Transaction;
 import com.financial.api.domain.transaction.repository.ITransactionRepository;
 import com.financial.api.infra.repositories.AbstractRepository;
 import com.financial.api.infra.repositories.transaction.Queries;
+import com.financial.api.infra.repositories.transaction.mapper.TransactionRowMapper;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
@@ -55,11 +56,18 @@ public class TransactionRepository extends AbstractRepository implements ITransa
 
     @Override
     public Flux<Transaction> findAll(String accountId) {
-        return null;
+        return databaseClient.sql(Queries.FIND_ALL_TRANSACTION_BY_ACCOUNT)
+                .bind("accountId", accountId)
+                .map(TransactionRowMapper.toTransaction())
+                .all();
     }
 
     @Override
     public Mono<Transaction> findById(String accountId, String transactionId) {
-        return null;
+        return databaseClient.sql(Queries.FIND_BY_TRANSACTION_ID)
+                .bind("accountId", accountId)
+                .bind("transactionId", transactionId)
+                .map(TransactionRowMapper.toTransaction())
+                .one();
     }
 }
