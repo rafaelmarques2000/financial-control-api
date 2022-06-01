@@ -18,4 +18,6 @@ public interface IAccountService {
 
     Flux<AccountShareUser> listAllShared(String userId, String accountId);
 
+    Mono<Void> deleteSharing(String userSharingId, String accountId);
+
 }

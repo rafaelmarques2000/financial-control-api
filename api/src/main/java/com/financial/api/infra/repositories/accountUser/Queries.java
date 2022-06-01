@@ -1,4 +1,4 @@
-package com.financial.api.infra.domain.accountUser;
+package com.financial.api.infra.repositories.accountUser;
 
 public interface Queries {
     String INSERT_ACCOUNT_USER = """
@@ -14,4 +14,5 @@ public interface Queries {
                 AND a.id::text = :accountId
             """;
 
+    String DELETE_SHARING = "DELETE FROM cx_user_accounts WHERE user_id::text = :userSharingId AND account_id::text= :accountId";
 }

@@ -71,11 +71,6 @@ public class AccountController {
                 .then().thenReturn(ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse("successfully shared", null)));
     }
 
-    @DeleteMapping(value = "/{accountId}/sharing/{userSharing}")
-    public Mono<ResponseEntity<?>> deleteUserSharing(@PathVariable String accountId, @PathVariable String userSharing) {
-        return Mono.just(ResponseEntity.ok().body("DELETE SHARING"));
-    }
-
     @GetMapping(value = "/{accountId}/sharing")
     public Mono<ResponseEntity<?>> listAllUserSharing(@PathVariable String userId, @PathVariable String accountId) {
         List<AccountShareUserResponse> list = new ArrayList<>();
@@ -84,4 +79,11 @@ public class AccountController {
                 .then()
                 .thenReturn(ResponseEntity.ok().body(list));
     }
+
+    @DeleteMapping(value = "/{accountId}/sharing/{userSharingId}")
+    public Mono<ResponseEntity<?>> deleteUserSharing(@PathVariable String accountId, @PathVariable String userSharingId) {
+        return accountService.deleteSharing(userSharingId, accountId).thenReturn(ResponseEntity.noContent().build());
+    }
+
+
 }

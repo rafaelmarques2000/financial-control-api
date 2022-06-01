@@ -1,14 +1,11 @@
-package com.financial.api.infra.domain.account.mapper;
+package com.financial.api.infra.repositories.account.mapper;
 
 import com.financial.api.domain.account.enums.AccountType;
 import com.financial.api.domain.account.model.Account;
-import com.financial.api.domain.user.enums.UserStatus;
-import com.financial.api.domain.user.model.User;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.function.BiFunction;
 
 public class AccountRowMapper {

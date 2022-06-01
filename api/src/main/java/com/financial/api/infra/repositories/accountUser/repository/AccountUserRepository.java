@@ -1,7 +1,8 @@
-package com.financial.api.infra.domain.accountUser.repository;
+package com.financial.api.infra.repositories.accountUser.repository;
 import com.financial.api.domain.accountUser.model.AccountShareUser;
 import com.financial.api.domain.accountUser.repository.IAccountUserRepository;
-import com.financial.api.infra.domain.accountUser.Queries;
+import com.financial.api.infra.repositories.AbstractRepository;
+import com.financial.api.infra.repositories.accountUser.Queries;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
@@ -10,14 +11,10 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 
-public class AccountUserRepository implements IAccountUserRepository {
-
-    private DatabaseClient databaseClient;
-    private TransactionalOperator operator;
+public class AccountUserRepository extends AbstractRepository implements IAccountUserRepository {
 
     public AccountUserRepository(DatabaseClient databaseClient, TransactionalOperator operator) {
-        this.databaseClient = databaseClient;
-        this.operator = operator;
+        super(databaseClient, operator);
     }
 
     @Override
@@ -41,5 +38,13 @@ public class AccountUserRepository implements IAccountUserRepository {
                         row.get("userId", String.class),
                         row.get("viewName", String.class)
                 )).all();
+    }
+
+    @Override
+    public Mono<Void> deleteSharing(String userSharingId, String accountId) {
+        return databaseClient.sql(Queries.DELETE_SHARING)
+                .bind("userSharingId", userSharingId)
+                .bind("accountId", accountId)
+                .then();
     }
 }

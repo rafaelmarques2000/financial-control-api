@@ -1,4 +1,4 @@
-package com.financial.api.infra.domain.account;
+package com.financial.api.infra.repositories.account;
 
 public interface Queries {
     String INSERT_ACCOUNT = """

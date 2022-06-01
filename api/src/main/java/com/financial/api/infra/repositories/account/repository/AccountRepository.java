@@ -1,8 +1,9 @@
-package com.financial.api.infra.domain.account.repository;
+package com.financial.api.infra.repositories.account.repository;
 import com.financial.api.domain.account.model.Account;
 import com.financial.api.domain.account.repository.IAccountRepository;
-import com.financial.api.infra.domain.account.Queries;
-import com.financial.api.infra.domain.account.mapper.AccountRowMapper;
+import com.financial.api.infra.repositories.AbstractRepository;
+import com.financial.api.infra.repositories.account.Queries;
+import com.financial.api.infra.repositories.account.mapper.AccountRowMapper;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
@@ -12,14 +13,10 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 
-public class AccountRepository implements IAccountRepository {
-
-    private DatabaseClient databaseClient;
-    private TransactionalOperator operator;
+public class AccountRepository extends AbstractRepository implements IAccountRepository {
 
     public AccountRepository(DatabaseClient databaseClient, TransactionalOperator operator) {
-        this.databaseClient = databaseClient;
-        this.operator = operator;
+        super(databaseClient, operator);
     }
 
     @Override

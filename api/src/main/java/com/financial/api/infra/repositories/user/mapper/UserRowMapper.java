@@ -1,4 +1,4 @@
-package com.financial.api.infra.domain.user.mapper;
+package com.financial.api.infra.repositories.user.mapper;
 
 import com.financial.api.domain.user.enums.UserStatus;
 import com.financial.api.domain.user.model.User;

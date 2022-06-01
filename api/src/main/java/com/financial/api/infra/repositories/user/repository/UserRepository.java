@@ -1,27 +1,20 @@
-package com.financial.api.infra.domain.user.repository;
+package com.financial.api.infra.repositories.user.repository;
 
 import com.financial.api.domain.user.enums.UserStatus;
 import com.financial.api.domain.user.model.User;
 import com.financial.api.domain.user.repository.IUserRepository;
-import com.financial.api.infra.domain.user.mapper.UserRowMapper;
-import io.r2dbc.spi.Row;
-import io.r2dbc.spi.RowMetadata;
-import org.springframework.context.annotation.ComponentScan;
+import com.financial.api.infra.repositories.AbstractRepository;
+import com.financial.api.infra.repositories.user.mapper.UserRowMapper;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
 
-import java.util.Date;
-import java.util.UUID;
-import java.util.function.BiFunction;
-
 @Component
-public class UserRepository implements IUserRepository {
+public class UserRepository extends AbstractRepository implements IUserRepository {
 
-    private DatabaseClient databaseClient;
-
-    public UserRepository(DatabaseClient databaseClient) {
-        this.databaseClient = databaseClient;
+    public UserRepository(DatabaseClient databaseClient, TransactionalOperator operator) {
+        super(databaseClient, operator);
     }
 
     @Override

@@ -68,4 +68,9 @@ public class AccountService implements IAccountService{
     public Flux<AccountShareUser> listAllShared(String userId, String accountId) {
         return accountUserRepository.listAllSharing(userId, accountId);
     }
+
+    @Override
+    public Mono<Void> deleteSharing(String userSharingId, String accountId) {
+        return accountUserRepository.deleteSharing(userSharingId, accountId);
+    }
 }
