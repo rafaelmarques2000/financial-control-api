@@ -10,5 +10,5 @@ public record Transaction(
         String extraDescription,
         String accountId,
         String transactionTypeId,
-        String TransactionCategoryId
+        String transactionCategoryId
 ) {}

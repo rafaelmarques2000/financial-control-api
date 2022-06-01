@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 public interface ITransactionRepository {
     Mono<Transaction> save(Transaction transaction);
     Mono<Transaction> update(Transaction transaction);
-    Mono<Void> delete(String transactionId);
-    Flux<Transaction> findAll();
-    Mono<Transaction> findById(String transactionId);
+    Mono<Void> delete(String accountId, String transactionId);
+    Flux<Transaction> findAll(String accountId);
+    Mono<Transaction> findById(String accountId,String transactionId);
 }
