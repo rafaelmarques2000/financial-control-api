@@ -1,4 +1,4 @@
-package com.financial.api.infra.repositories.transaction.repository;
+package com.financial.api.infra.repositories.transaction;
 
 import com.financial.api.domain.transaction.model.Transaction;
 import com.financial.api.domain.transaction.repository.ITransactionRepository;

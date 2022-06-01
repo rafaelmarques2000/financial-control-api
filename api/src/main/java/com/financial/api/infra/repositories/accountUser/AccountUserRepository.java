@@ -1,4 +1,4 @@
-package com.financial.api.infra.repositories.accountUser.repository;
+package com.financial.api.infra.repositories.accountUser;
 import com.financial.api.domain.accountUser.model.AccountShareUser;
 import com.financial.api.domain.accountUser.repository.IAccountUserRepository;
 import com.financial.api.infra.repositories.AbstractRepository;

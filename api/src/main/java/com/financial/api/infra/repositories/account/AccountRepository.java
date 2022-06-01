@@ -1,4 +1,4 @@
-package com.financial.api.infra.repositories.account.repository;
+package com.financial.api.infra.repositories.account;
 import com.financial.api.domain.account.model.Account;
 import com.financial.api.domain.account.repository.IAccountRepository;
 import com.financial.api.infra.repositories.AbstractRepository;
