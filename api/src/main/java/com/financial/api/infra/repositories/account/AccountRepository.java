@@ -26,6 +26,8 @@ public class AccountRepository extends AbstractRepository implements IAccountRep
                 .bind("description", account.description())
                 .bind("initialAmount", account.initialAmount())
                 .bind("type", account.type())
+                .bind("createdAt", account.createdAt())
+                .bind("updatedAt", account.updatedAt())
                 .fetch().rowsUpdated()
                 .then(databaseClient
                         .sql(Queries.INSERT_ACCOUNT_USER)

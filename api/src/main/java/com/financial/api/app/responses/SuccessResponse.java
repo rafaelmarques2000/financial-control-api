@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record SuccessResponse(
     @JsonProperty(value = "message")
     String message,
-    @JsonProperty(value = "id")
-    String id
+    @JsonProperty(value = "data")
+    Object data
 ){}

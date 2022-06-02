@@ -9,19 +9,20 @@ import com.financial.api.domain.account.model.Account;
 import com.financial.api.domain.accountUser.model.AccountShareUser;
 import com.financial.api.domain.user.model.User;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
 public class AccountMapper {
 
-    public static Account toAccountResquestFromAccount(AccountRequest accountRequest, String accountId) {
+    public static Account toAccountRequestFromAccount(AccountRequest accountRequest, String accountId) {
         return new Account(
                  accountId == null ? UUID.randomUUID().toString() : accountId,
                  accountRequest.description(),
                  accountRequest.initialAmount(),
                  AccountType.valueOf(accountRequest.Type()),
-                 null,
-                null
+                 LocalDateTime.now(),
+                 LocalDateTime.now()
          );
     }
 

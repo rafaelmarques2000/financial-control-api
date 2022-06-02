@@ -16,7 +16,8 @@ public class TransactionService implements ITransactionService{
 
     @Override
     public Mono<Transaction> save(Transaction transaction) {
-        return transactionRepository.save(transaction);
+        return transactionRepository.save(transaction)
+                .then(transactionRepository.findById(transaction.accountId(), transaction.id()));
     }
 
     @Override
@@ -24,7 +25,8 @@ public class TransactionService implements ITransactionService{
         return transactionRepository
                 .findById(transaction.accountId(),transaction.id())
                 .switchIfEmpty(Mono.error(new TransactionNotFoundException("Transaction not found")))
-                .then(transactionRepository.update(transaction));
+                .then(transactionRepository.update(transaction))
+                .then(transactionRepository.findById(transaction.accountId(), transaction.id()));
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.financial.api.infra.repositories.account;
 
 public interface Queries {
     String INSERT_ACCOUNT = """
-                INSERT INTO cx_accounts(id, description, initial_amount, type) 
-                VALUES(:id,:description,:initialAmount,:type)
+                INSERT INTO cx_accounts(id, description, initial_amount, type, created_at, updated_at) 
+                VALUES(:id,:description,:initialAmount,:type, :createdAt, :updatedAt)
             """;
 
     String INSERT_ACCOUNT_USER = """

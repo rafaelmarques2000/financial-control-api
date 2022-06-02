@@ -43,17 +43,17 @@ public class AccountController {
     public Mono<ResponseEntity<?>> create(@RequestBody @Validated AccountRequest accountRequest, @PathVariable String userId) {
          return accountService.save(
                  userId,
-                 AccountMapper.toAccountResquestFromAccount(accountRequest, null)
+                 AccountMapper.toAccountRequestFromAccount(accountRequest, null)
                 ).map(account -> ResponseEntity.status(HttpStatus.CREATED)
-                 .body(new SuccessResponse("Account created", account.id())));
+                 .body(new SuccessResponse("Account created", account)));
     }
 
     @PutMapping(value = "/{accountId}")
     public Mono<ResponseEntity<?>> update(@RequestBody AccountRequest accountRequest, @PathVariable String userId, @PathVariable String accountId) {
         return accountService.update(
                 userId,
-                AccountMapper.toAccountResquestFromAccount(accountRequest, accountId)
-        ).map(account -> ResponseEntity.ok().body(new SuccessResponse("Account updated", accountId)));
+                AccountMapper.toAccountRequestFromAccount(accountRequest, accountId)
+        ).map(account -> ResponseEntity.ok().body(new SuccessResponse("Account updated", account)));
     }
 
     @DeleteMapping(value = "/{accountId}")
