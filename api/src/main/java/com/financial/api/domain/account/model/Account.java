@@ -10,5 +10,6 @@ public record Account(
      Integer initialAmount,
      AccountType type,
      LocalDateTime createdAt,
-     LocalDateTime updatedAt
+     LocalDateTime updatedAt,
+     Boolean owner
 ) {}

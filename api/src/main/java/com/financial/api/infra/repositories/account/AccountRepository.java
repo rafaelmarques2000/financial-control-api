@@ -33,7 +33,7 @@ public class AccountRepository extends AbstractRepository implements IAccountRep
                         .sql(Queries.INSERT_ACCOUNT_USER)
                         .bind("userId", UUID.fromString(userId))
                         .bind("accountId", UUID.fromString(account.id()))
-                        .bind("accountOwner", true)
+                        .bind("accountOwner", account.owner())
                         .fetch().rowsUpdated())
                 .as(operator::transactional)
                 .thenReturn(account);

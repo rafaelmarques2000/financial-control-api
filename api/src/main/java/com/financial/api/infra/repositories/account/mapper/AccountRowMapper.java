@@ -17,7 +17,8 @@ public class AccountRowMapper {
                 row.get("initial_amount", Integer.class),
                 row.get("type", AccountType.class),
                 row.get("created_at", LocalDateTime.class),
-                row.get("updated_at", LocalDateTime.class)
+                row.get("updated_at", LocalDateTime.class),
+                row.get("owner", Boolean.class)
         );
     }
 

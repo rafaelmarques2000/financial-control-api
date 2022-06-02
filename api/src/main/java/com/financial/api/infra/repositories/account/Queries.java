@@ -20,7 +20,7 @@ public interface Queries {
             """;
 
     String FIND_ALL_ACCOUNTS_BY_USER = """
-                 SELECT a.id, a.description, a.initial_amount, a.type, a.created_at, a.updated_at
+                 SELECT a.id, a.description, a.initial_amount, a.type, a.created_at, a.updated_at, cua.owner
                         FROM CX_ACCOUNTS a
                         JOIN cx_user_accounts cua on a.id = cua.account_id
                         JOIN cx_user cxu on cua.user_id = cxu.id

@@ -26,15 +26,16 @@ public class AccountService implements IAccountService{
 
     @Override
     public Mono<Account> save(String userId, Account account) {
-        return accountRepository.save(userId,account);
+        return accountRepository.save(userId,account)
+                .then(accountRepository.findById(userId, account.id()));
     }
 
     @Override
     public Mono<Account> update(String userId, Account account) {
         return accountRepository.findById(userId, account.id())
                 .switchIfEmpty(Mono.error(new AccountNotFoundException("Account not found")))
-                .flatMap(account1 -> accountRepository.update(userId, account1))
-                .thenReturn(account);
+                .then(accountRepository.update(userId, account))
+                .then(accountRepository.findById(userId, account.id()));
     }
 
     @Override
@@ -46,8 +47,7 @@ public class AccountService implements IAccountService{
 
     @Override
     public Flux<Account> findAll(String userId) {
-        return accountRepository.findAll(userId).
-                switchIfEmpty(Mono.error(new AccountNotFoundException("Accounts in user not found")));
+        return accountRepository.findAll(userId);
     }
 
     @Override

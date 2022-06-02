@@ -13,6 +13,8 @@ public record AccountResponse(
    Integer initialAmount,
    @JsonProperty(value = "type")
    String type,
+   @JsonProperty(value = "owner")
+   Boolean owner,
    @JsonProperty(value = "created_at")
    LocalDateTime createdAt,
    @JsonProperty(value = "updated_at")

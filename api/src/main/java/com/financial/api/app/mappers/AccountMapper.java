@@ -22,7 +22,8 @@ public class AccountMapper {
                  accountRequest.initialAmount(),
                  AccountType.valueOf(accountRequest.Type()),
                  LocalDateTime.now(),
-                 LocalDateTime.now()
+                 LocalDateTime.now(),
+                true
          );
     }
 
@@ -32,6 +33,7 @@ public class AccountMapper {
                 account.description(),
                 account.initialAmount(),
                 account.type().getDescription(),
+                account.owner(),
                 account.createdAt(),
                 account.updatedAt()
         );
