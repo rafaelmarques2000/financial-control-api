@@ -8,6 +8,7 @@ import com.financial.api.domain.transaction.service.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -22,7 +23,7 @@ public class TransactionController {
     private ITransactionService transactionService;
 
     @PostMapping
-    public Mono<ResponseEntity<?>> create(@PathVariable String accountId, @RequestBody TransactionRequest transaction) {
+    public Mono<ResponseEntity<?>> create(@PathVariable String accountId, @RequestBody @Validated TransactionRequest transaction) {
         return transactionService
                 .save(TransactionMapper.fromTransactionRequestToTransaction(transaction, null, accountId))
                 .map(createdTransaction -> ResponseEntity.status(HttpStatus.CREATED)
@@ -30,7 +31,7 @@ public class TransactionController {
     }
 
     @PutMapping(value = "/{transactionId}")
-    public Mono<ResponseEntity<?>> update(@PathVariable String userId, @PathVariable String accountId, @PathVariable String transactionId,@RequestBody TransactionRequest transaction) {
+    public Mono<ResponseEntity<?>> update(@PathVariable String accountId, @PathVariable String transactionId,@RequestBody @Validated TransactionRequest transaction) {
         return transactionService
                 .update(TransactionMapper.fromTransactionRequestToTransaction(transaction, transactionId, accountId))
                 .map(updatedTransaction -> ResponseEntity.ok()

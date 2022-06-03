@@ -16,7 +16,7 @@ public record AccountRequest(
         @JsonProperty(value = "type")
         @NotBlank(message = "Preencha o campo type")
         @Pattern(
-                regexp = "^CORRENTE|POUPANCA|DINHEIRO|CARTAO_CREDITO|INVESTIMENTO*",
+                regexp = "^CORRENTE|POUPANCA|DINHEIRO|CARTAO_CREDITO|INVESTIMENTO$",
                 message = "Valor não permitido para o campo type"
         )
         String Type

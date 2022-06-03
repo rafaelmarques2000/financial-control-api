@@ -6,9 +6,9 @@ import javax.validation.constraints.NotBlank;
 
 public record LoginRequest(
         @JsonProperty(value = "username")
-        @NotBlank(message="Username is mandatory")
+        @NotBlank(message="Informe seu usuário")
         String username,
         @JsonProperty(value = "password")
-        @NotBlank(message="Password is mandatory")
+        @NotBlank(message="Informe sua senha")
         String password
 ) {}

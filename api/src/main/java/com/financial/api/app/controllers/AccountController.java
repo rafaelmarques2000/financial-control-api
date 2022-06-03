@@ -65,7 +65,7 @@ public class AccountController {
     }
 
     @PostMapping(value = "/{accountId}/sharing")
-    public Mono<ResponseEntity<?>> createUserSharing(@RequestBody AccountShareRequest accountShareRequest, @PathVariable String accountId) {
+    public Mono<ResponseEntity<?>> createUserSharing(@RequestBody @Validated AccountShareRequest accountShareRequest, @PathVariable String accountId) {
         return accountService
                 .shareAccount(accountShareRequest.sharedUsers(), accountId)
                 .then().thenReturn(ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse("successfully shared", null)));
