@@ -1,6 +1,7 @@
 package com.financial.api.domain.account.service;
 
 import com.financial.api.domain.account.exception.AccountNotFoundException;
+import com.financial.api.domain.account.exception.IlegalAccountOperationException;
 import com.financial.api.domain.account.model.Account;
 import com.financial.api.domain.account.repository.IAccountRepository;
 import com.financial.api.domain.accountUser.model.AccountShareUser;
@@ -34,6 +35,12 @@ public class AccountService implements IAccountService{
     public Mono<Account> update(String userId, Account account) {
         return accountRepository.findById(userId, account.id())
                 .switchIfEmpty(Mono.error(new AccountNotFoundException("Account not found")))
+                .map(findAccount -> {
+                   if(!findAccount.owner()) {
+                       throw new IlegalAccountOperationException("Não é possivel atualizar uma conta cujo você não é proprietario.");
+                   }
+                   return  findAccount;
+                })
                 .then(accountRepository.update(userId, account))
                 .then(accountRepository.findById(userId, account.id()));
     }
@@ -42,6 +49,12 @@ public class AccountService implements IAccountService{
     public Mono<Void> delete(String userId, String accountId) {
          return accountRepository.findById(userId, accountId)
                  .switchIfEmpty(Mono.error(new AccountNotFoundException("Account not found")))
+                 .map(account -> {
+                     if(!account.owner()) {
+                         throw new IlegalAccountOperationException("Não é possivel deletar uma conta que você não seja o proprietario");
+                     }
+                     return account;
+                 })
                  .flatMap(account -> accountRepository.delete(userId,account.id()));
     }
 

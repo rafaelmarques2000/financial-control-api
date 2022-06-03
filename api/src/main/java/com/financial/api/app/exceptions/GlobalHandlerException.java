@@ -2,6 +2,7 @@ package com.financial.api.app.exceptions;
 
 import com.financial.api.app.responses.ErrorResponse;
 import com.financial.api.app.responses.ValidationErrorResponse;
+import com.financial.api.domain.exceptions.IlegalOperationException;
 import com.financial.api.domain.exceptions.NotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -23,6 +24,10 @@ public class GlobalHandlerException {
 
         if(exception instanceof NotFoundException) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(exception.getMessage()));
+        }
+
+        if(exception instanceof IlegalOperationException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(exception.getMessage()));
         }
 
         if(exception instanceof WebExchangeBindException) {
