@@ -4,6 +4,7 @@ import com.financial.api.app.mappers.TransactionMapper;
 import com.financial.api.app.requests.TransactionRequest;
 import com.financial.api.app.responses.SuccessResponse;
 import com.financial.api.app.responses.TransactionResponse;
+import com.financial.api.domain.transaction.filter.TransactionFilter;
 import com.financial.api.domain.transaction.service.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,10 +54,17 @@ public class TransactionController {
     }
 
     @GetMapping
-    public Mono<ResponseEntity<?>> getAll(@PathVariable String accountId) {
+    public Mono<ResponseEntity<?>> getAll(
+            @PathVariable String accountId,
+            @RequestParam(name = "beginDate", required = false)String beginDate,
+            @RequestParam(name = "endDate", required = false) String endDate,
+            @RequestParam(name = "categoryId", required = false) String categoryId,
+            @RequestParam(name = "typeId", required = false) String typeId
+    ) {
+
         List<TransactionResponse> responseList = new ArrayList<>();
         return transactionService
-                .findAll(accountId)
+                .findAll(accountId, (new TransactionFilter()).formatParams(beginDate, endDate, categoryId, typeId))
                 .map(transaction -> responseList.add(TransactionMapper.fromTransactionToTransactionResponse(transaction)))
                 .then().thenReturn(ResponseEntity.ok().body(responseList));
     }

@@ -1,6 +1,7 @@
 package com.financial.api.domain.transaction.service;
 
 import com.financial.api.domain.transaction.exception.TransactionNotFoundException;
+import com.financial.api.domain.transaction.filter.TransactionFilter;
 import com.financial.api.domain.transaction.model.Transaction;
 import com.financial.api.domain.transaction.repository.ITransactionRepository;
 import reactor.core.publisher.Flux;
@@ -38,9 +39,9 @@ public class TransactionService implements ITransactionService{
     }
 
     @Override
-    public Flux<Transaction> findAll(String accountId) {
+    public Flux<Transaction> findAll(String accountId, TransactionFilter filter) {
         return transactionRepository
-                .findAll(accountId);
+                .findAll(accountId, filter);
     }
 
     @Override

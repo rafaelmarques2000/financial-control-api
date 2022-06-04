@@ -1,5 +1,6 @@
 package com.financial.api.infra.repositories.transaction;
 
+import com.financial.api.domain.transaction.filter.TransactionFilter;
 import com.financial.api.domain.transaction.model.Transaction;
 import com.financial.api.domain.transaction.repository.ITransactionRepository;
 import com.financial.api.infra.repositories.AbstractRepository;
@@ -58,11 +59,30 @@ public class TransactionRepository extends AbstractRepository implements ITransa
     }
 
     @Override
-    public Flux<Transaction> findAll(String accountId) {
-        return databaseClient.sql(Queries.FIND_ALL_TRANSACTION_BY_ACCOUNT)
-                .bind("accountId", accountId)
-                .map(TransactionRowMapper.toTransaction())
-                .all();
+    public Flux<Transaction> findAll(String accountId, TransactionFilter filter) {
+
+        if(!filter.hasFilter()) {
+            return databaseClient.sql(Queries.FIND_ALL_TRANSACTION_BY_ACCOUNT)
+                    .bind("accountId", accountId)
+                    .map(TransactionRowMapper.toTransaction())
+                    .all();
+        }
+
+        String sql = Queries.FIND_ALL_TRANSACTION_BY_ACCOUNT;
+
+        if(filter.getBeginDate() != null) {
+            sql = sql.concat(" AND t.date BETWEEN :beginDate AND :endDate");
+        }
+
+        if(filter.getCategoryId() != null) {
+            sql = sql.concat(" AND tc.id::text = :categoryId");
+        }
+
+        if(filter.getTypeId() != null) {
+            sql = sql.concat(" AND ctt.id::text = :typeId");
+        }
+
+        return getAllTransactionByFilter(accountId, filter, sql);
     }
 
     @Override
@@ -72,5 +92,27 @@ public class TransactionRepository extends AbstractRepository implements ITransa
                 .bind("transactionId", transactionId)
                 .map(TransactionRowMapper.toTransaction())
                 .one();
+    }
+
+    private Flux<Transaction> getAllTransactionByFilter(String accountId, TransactionFilter filter, String sql) {
+
+        DatabaseClient.GenericExecuteSpec sqlClient = databaseClient.sql(sql)
+                .bind("accountId", accountId);
+
+        if(filter.getBeginDate() != null) {
+            sqlClient = sqlClient
+                    .bind("beginDate", filter.getBeginDate())
+                    .bind("endDate", filter.getEndDate());
+        }
+
+        if(filter.getCategoryId() != null) {
+            sqlClient = sqlClient.bind("categoryId", filter.getCategoryId());
+        }
+
+        if(filter.getTypeId() != null) {
+            sqlClient = sqlClient.bind("typeId", filter.getTypeId());
+        }
+
+        return sqlClient.map(TransactionRowMapper.toTransaction()).all();
     }
 }
