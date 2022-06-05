@@ -10,8 +10,8 @@ public record Transaction(
         Integer value,
         String extraDescription,
         String accountId,
-        TransactionType Type,
-        TransactionCategory Category,
+        TransactionType type,
+        TransactionCategory category,
         LocalDateTime created_at,
         LocalDateTime updated_at
 ) {}

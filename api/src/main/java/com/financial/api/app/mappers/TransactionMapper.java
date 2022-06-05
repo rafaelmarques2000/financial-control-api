@@ -34,8 +34,8 @@ public class TransactionMapper {
                 transaction.value(),
                 transaction.extraDescription(),
                 transaction.accountId(),
-                transaction.Type(),
-                transaction.Category(),
+                transaction.type(),
+                transaction.category(),
                 transaction.created_at(),
                 transaction.updated_at()
         );

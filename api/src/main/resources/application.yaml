@@ -12,5 +12,5 @@ db_server:
   username: "root"
   password: "root"
 
-jwt_secret: 219w8sd9ad89sad8a9sd8s9ad8as9e852198rq39489w89w8ed9d8a9d8a94829*r8tg9dt859
+jwt_secret: MjE5dzhzZDlhZDg5c2FkOGE5c2Q4czlhZDhhczllODUyMTk4cnEzOTQ4OXc4OXc4ZWQ5ZDhhOWQ4YTk0ODI5KnI4dGc5ZHQ4NTk=
 jwt_expiration: 120
