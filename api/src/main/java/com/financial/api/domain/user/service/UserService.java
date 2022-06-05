@@ -16,10 +16,9 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public Mono<String> findByUsernameAndPassword(String username, String password) {
+    public Mono<User> findByUsername(String username) {
         return userRepository
-                .findByUsernameAndPassword(username, password)
-                .map(User::id)
+                .findByUsername(username)
                 .switchIfEmpty(Mono.error(new UserNotFoundException("Usuário não encontrado.")));
     }
 

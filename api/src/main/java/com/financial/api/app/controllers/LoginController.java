@@ -2,6 +2,8 @@ package com.financial.api.app.controllers;
 
 import com.financial.api.app.requests.LoginRequest;
 import com.financial.api.app.responses.LoginResponse;
+import com.financial.api.app.utils.BCriptyUtil;
+import com.financial.api.domain.user.exceptions.UserNotFoundException;
 import com.financial.api.domain.user.service.IUserService;
 import com.financial.api.app.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,13 @@ public class LoginController {
     @PostMapping(value = "/auth")
     public Mono<ResponseEntity<LoginResponse>> authenticate(@RequestBody @Validated LoginRequest loginRequest) {
         return userService
-                .findByUsernameAndPassword(loginRequest.username(),loginRequest.password())
-                .map(id -> ResponseEntity.ok().body(new LoginResponse(jwtUtils.generateJwtToken(id))));
+                .findByUsername(loginRequest.username())
+                .map(user -> {
+                    if(!BCriptyUtil.checkPassword(loginRequest.password(), user.password())) {
+                        throw new UserNotFoundException("Usuário não encontrado");
+                    }
+                    return ResponseEntity.ok().body(new LoginResponse(jwtUtils.generateJwtToken(user.id())));
+                });
     }
 
 }

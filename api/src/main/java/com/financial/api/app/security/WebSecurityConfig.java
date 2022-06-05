@@ -25,7 +25,7 @@ public class WebSecurityConfig {
 
     @Bean
     SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) {
-        String[] patterns = new String[] {"/api/v1/**"};
+        String[] patterns = new String[] {"/api/v1/auth/**"};
         return http.cors().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint((swe, e) -> Mono.fromRunnable(() -> {

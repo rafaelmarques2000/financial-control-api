@@ -10,4 +10,4 @@ spring:
       order: 0
 
 jwt_secret: 219w8sd9ad89sad8a9sd8s9ad8as9e852198rq39489w89w8ed9d8a9d8a94829*r8tg9dt859
-jwt_expiration: 30
+jwt_expiration: 120

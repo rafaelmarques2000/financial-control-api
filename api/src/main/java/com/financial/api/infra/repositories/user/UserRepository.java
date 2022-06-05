@@ -18,10 +18,9 @@ public class UserRepository extends AbstractRepository implements IUserRepositor
     }
 
     @Override
-    public Mono<User> findByUsernameAndPassword(String username, String password) {
-         return this.databaseClient.sql("SELECT * from cx_user WHERE login=:user AND password = :pass AND status=:status")
+    public Mono<User> findByUsername(String username) {
+         return this.databaseClient.sql("SELECT * from cx_user WHERE login=:user AND status=:status")
                  .bind("user", username)
-                 .bind("pass", password)
                  .bind("status", UserStatus.ACTIVE)
                  .map(UserRowMapper.toUser()).one();
     }
