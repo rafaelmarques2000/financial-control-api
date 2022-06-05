@@ -6,6 +6,7 @@ import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import io.r2dbc.postgresql.codec.EnumCodec;
 import io.r2dbc.spi.ConnectionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.r2dbc.connection.R2dbcTransactionManager;
@@ -17,14 +18,30 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 @Configuration
 @EnableTransactionManagement
 public class DatabaseConfig {
+
+    @Value("${db_server.host}")
+    private String host;
+
+    @Value("${db_server.port}")
+    private Integer port;
+
+    @Value("${db_server.database}")
+    private String database;
+
+    @Value("${db_server.username}")
+    private String username;
+
+    @Value("${db_server.password}")
+    private String password;
+
     @Bean
     public ConnectionFactory connectionFactory() {
         return new PostgresqlConnectionFactory(PostgresqlConnectionConfiguration.builder()
-                .host("localhost")
-                .port(5438)
-                .database("financial_api")
-                .username("root")
-                .password("root")
+                .host(host)
+                .port(port)
+                .database(database)
+                .username(username)
+                .password(password)
                 .codecRegistrar(EnumCodec.builder().withEnum("user_status", UserStatus.class).build())
                 .codecRegistrar(EnumCodec.builder().withEnum("account_type", AccountType.class).build())
                 .build());
