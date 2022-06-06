@@ -1,11 +1,13 @@
 package com.financial.api.app.utils;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -17,7 +19,7 @@ public class BCriptyUtilTest {
         //WHEN
             String hashedPassword = BCriptyUtil.Encode(password);
         //THEN
-            Assertions.assertTrue(checkLengthHashedPassword(hashedPassword));
+            assertTrue(checkLengthHashedPassword(hashedPassword));
     }
 
     @ParameterizedTest
@@ -26,7 +28,7 @@ public class BCriptyUtilTest {
         //GIVEN
         String hashedPassword = BCriptyUtil.Encode(password);
         //THEN
-        Assertions.assertTrue(BCriptyUtil.checkPassword(password, hashedPassword));
+        assertTrue(BCriptyUtil.checkPassword(password, hashedPassword));
     }
 
     @ParameterizedTest
@@ -36,7 +38,7 @@ public class BCriptyUtilTest {
         String hashedPassword = BCriptyUtil.Encode(password);
         String wrongPassword = "568988";
         //THEN
-        Assertions.assertFalse(BCriptyUtil.checkPassword(wrongPassword, hashedPassword));
+        assertFalse(BCriptyUtil.checkPassword(wrongPassword, hashedPassword));
     }
 
     private boolean checkLengthHashedPassword(String hashedPassword) {
