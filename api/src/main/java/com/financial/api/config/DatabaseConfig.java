@@ -1,6 +1,8 @@
 package com.financial.api.config;
 
 import com.financial.api.domain.account.enums.AccountType;
+import com.financial.api.domain.services.enums.RecurrenceType;
+import com.financial.api.domain.services.enums.Status;
 import com.financial.api.domain.user.enums.UserStatus;
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
@@ -44,6 +46,8 @@ public class DatabaseConfig {
                 .password(password)
                 .codecRegistrar(EnumCodec.builder().withEnum("user_status", UserStatus.class).build())
                 .codecRegistrar(EnumCodec.builder().withEnum("account_type", AccountType.class).build())
+                .codecRegistrar(EnumCodec.builder().withEnum("service_status", Status.class).build())
+                .codecRegistrar(EnumCodec.builder().withEnum("service_recurrence_type", RecurrenceType.class).build())
                 .build());
     }
 

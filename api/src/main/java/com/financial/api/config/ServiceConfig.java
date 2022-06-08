@@ -4,6 +4,9 @@ import com.financial.api.domain.account.repository.IAccountRepository;
 import com.financial.api.domain.account.service.AccountService;
 import com.financial.api.domain.account.service.IAccountService;
 import com.financial.api.domain.accountUser.repository.IAccountUserRepository;
+import com.financial.api.domain.services.repository.IServiceRepository;
+import com.financial.api.domain.services.service.IService;
+import com.financial.api.domain.services.service.Services;
 import com.financial.api.domain.transaction.repository.ITransactionCategoryRepository;
 import com.financial.api.domain.transaction.repository.ITransactionRepository;
 import com.financial.api.domain.transaction.repository.ITransactionTypeRepository;
@@ -39,6 +42,11 @@ public class ServiceConfig {
     @Bean
     public ITransactionCategoryService transactionCategoryService(ITransactionCategoryRepository transactionCategoryRepository) {
         return new TransactionCategoryService(transactionCategoryRepository);
+    }
+
+    @Bean
+    public IService service(IServiceRepository serviceRepository) {
+        return new Services(serviceRepository);
     }
 
 }

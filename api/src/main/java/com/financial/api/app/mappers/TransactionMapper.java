@@ -22,7 +22,8 @@ public class TransactionMapper {
                     new TransactionType(transactionRequest.transactionTypeId(),""),
                     new TransactionCategory(transactionRequest.transactionCategoryId(), ""),
                     LocalDateTime.now(),
-                    LocalDateTime.now()
+                    LocalDateTime.now(),
+                    null
                 );
     }
 

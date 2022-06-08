@@ -1,4 +1,15 @@
 CREATE TYPE user_status AS ENUM ('ACTIVE', 'BLOCKED');
+CREATE TYPE service_recurrence_type AS ENUM ('MONTHLY','YEARLY');
+CREATE TYPE service_status AS ENUM ('ACTIVE','INACTIVE');
+CREATE TYPE account_type AS ENUM (
+    'CORRENTE',
+    'POUPANCA',
+    'DINHEIRO',
+    'CARTAO_CREDITO',
+    'INVESTIMENTO'
+    );
+
+
 
 CREATE TABLE CX_USER (
                          id uuid PRIMARY KEY,
@@ -9,14 +20,6 @@ CREATE TABLE CX_USER (
                          updated_at date default CURRENT_TIMESTAMP,
                          status user_status not null
 );
-
-CREATE TYPE account_type AS ENUM (
-    'CORRENTE',
-    'POUPANCA',
-    'DINHEIRO',
-    'CARTAO_CREDITO',
-    'INVESTIMENTO'
-    );
 
 CREATE TABLE CX_ACCOUNTS(
                             id uuid PRIMARY KEY,
@@ -58,4 +61,19 @@ CREATE TABLE cx_account_transaction(
                                        FOREIGN KEY(account_id) REFERENCES cx_accounts(id),
                                        FOREIGN KEY(transaction_type_id) REFERENCES cx_transaction_type(id),
                                        FOREIGN KEY(transaction_category_id) REFERENCES cx_transaction_category(id)
+)
+
+CREATE TABLE cx_service(
+                           id uuid primary key ,
+                           description varchar(200) not null ,
+                           value integer not null,
+                           recurrence_type service_recurrence_type not null,
+                           user_id uuid not null,
+                           account_id uuid not null,
+                           created_at timestamp not null,
+                           updated_at timestamp not null,
+                           deleted_at timestamp,
+                           status service_status not null,
+                           FOREIGN KEY (user_id) REFERENCES cx_user(id),
+                           FOREIGN KEY (account_id) REFERENCES cx_accounts(id)
 )

@@ -2,6 +2,7 @@ package com.financial.api.domain.transaction.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record Transaction(
         String id,
@@ -13,5 +14,6 @@ public record Transaction(
         TransactionType type,
         TransactionCategory category,
         LocalDateTime created_at,
-        LocalDateTime updated_at
+        LocalDateTime updated_at,
+        UUID serviceReference
 ) {}

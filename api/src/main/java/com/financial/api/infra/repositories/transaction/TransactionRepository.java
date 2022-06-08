@@ -6,9 +6,12 @@ import com.financial.api.domain.transaction.repository.ITransactionRepository;
 import com.financial.api.infra.repositories.AbstractRepository;
 import com.financial.api.infra.repositories.transaction.mapper.TransactionRowMapper;
 import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.r2dbc.core.Parameter;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -31,6 +34,7 @@ public class TransactionRepository extends AbstractRepository implements ITransa
                 .bind("transactionCategoryId", UUID.fromString(transaction.category().id()))
                 .bind("createdAt", transaction.created_at())
                 .bind("updatedAt", transaction.updated_at())
+                .bind("serviceReference", Parameter.fromOrEmpty(transaction.serviceReference(), UUID.class))
                 .then().thenReturn(transaction);
     }
 
@@ -92,6 +96,16 @@ public class TransactionRepository extends AbstractRepository implements ITransa
                 .bind("transactionId", transactionId)
                 .map(TransactionRowMapper.toTransaction())
                 .one();
+    }
+
+    @Override
+    public Flux<Transaction> findByDateAndServiceReference(LocalDate beginDate, LocalDate endDate, String serviceReference) {
+        return databaseClient.sql(Queries.FIND_ALL_TRANSACTION_BY_SERVICE_REFERENCE)
+                .bind("serviceReference", UUID.fromString(serviceReference))
+                .bind("beginDate", beginDate)
+                .bind("endDate", endDate)
+                .map(TransactionRowMapper.toTransaction())
+                .all();
     }
 
     private Flux<Transaction> getAllTransactionByFilter(String accountId, TransactionFilter filter, String sql) {

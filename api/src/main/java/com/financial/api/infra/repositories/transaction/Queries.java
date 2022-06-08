@@ -12,7 +12,8 @@ public interface Queries {
                    transaction_type_id,
                    transaction_category_id,
                    created_at,
-                   updated_at
+                   updated_at,
+                   service_reference
                 )
                 VALUES(
                     :id,
@@ -24,7 +25,8 @@ public interface Queries {
                     :transactionTypeId,
                     :transactionCategoryId,
                     :createdAt,
-                    :updatedAt
+                    :updatedAt,
+                    :serviceReference
                 )
             """;
 
@@ -76,6 +78,30 @@ public interface Queries {
 
     String FIND_ALL_TRANSACTION_TYPE_CATEGORIES = """
                  SELECT id, description FROM cx_transaction_category WHERE transaction_type_id = :categoryId
+            """;
+
+
+
+
+    String FIND_ALL_TRANSACTION_BY_SERVICE_REFERENCE = """
+                SELECT t.id,
+                       t.description,
+                       t.date,
+                       t.value,
+                       t.extra_description,
+                       t.account_id,
+                       ctt.id as type_id,
+                       ctt.description as type,
+                       tc.id as category_id,
+                       tc.description as category,
+                       t.created_at,
+                       t.updated_at
+                    from cx_account_transaction t
+                    join cx_accounts ca on t.account_id = ca.id
+                    join cx_transaction_type ctt on t.transaction_type_id = ctt.id
+                    join cx_transaction_category tc on t.transaction_category_id = tc.id
+                    where t.deleted_at is null AND t.service_reference = :serviceReference
+                    AND t.date BETWEEN :beginDate AND :endDate
             """;
 
 

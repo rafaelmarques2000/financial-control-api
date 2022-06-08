@@ -24,7 +24,8 @@ public class TransactionRowMapper {
                 new TransactionType(row.get("type_id",String.class),row.get("type", String.class)),
                 new TransactionCategory(row.get("category_id", String.class), row.get("category", String.class)),
                 row.get("created_at", LocalDateTime.class),
-                row.get("updated_at", LocalDateTime.class)
+                row.get("updated_at", LocalDateTime.class),
+                null
         );
     }
 }
