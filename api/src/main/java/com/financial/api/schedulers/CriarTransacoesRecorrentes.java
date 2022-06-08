@@ -7,6 +7,8 @@ import com.financial.api.domain.transaction.model.Transaction;
 import com.financial.api.domain.transaction.model.TransactionCategory;
 import com.financial.api.domain.transaction.model.TransactionType;
 import com.financial.api.domain.transaction.repository.ITransactionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,9 +27,10 @@ public class CriarTransacoesRecorrentes {
 
     @Autowired
     IServiceRepository serviceRepository;
-
     @Autowired
     ITransactionRepository transactionRepository;
+
+    Logger logger = LoggerFactory.getLogger(CriarTransacoesRecorrentes.class);
 
     @Scheduled(cron = "1 * * * * *", zone = TIME_ZONE)
     public void efetuarLancamento() {
@@ -48,24 +51,28 @@ public class CriarTransacoesRecorrentes {
         transactionRepository.findByDateAndServiceReference(beginMonth, end, service.id())
                 .collectList().subscribe(transactions -> {
                       if(transactions.isEmpty()) {
-                          transactionRepository.save(new Transaction(
-                                  UUID.randomUUID().toString(),
-                                  service.description(),
-                                  beginMonth,
-                                  service.value(),
-                                  "Lançado automaticamente pelo sistema",
-                                  service.accountId(),
-                                  new TransactionType("b607761c-7c57-4b0e-804b-dfccea1a2a95", ""),
-                                  new TransactionCategory("dccf7735-b74e-46ef-ac01-a30a5ed4f3d5", ""),
-                                  LocalDateTime.now(),
-                                  LocalDateTime.now(),
-                                  UUID.fromString(service.id())
-                          )).subscribe(transaction -> {
-                              System.out.println("Sucesso ao criar automaticamente");
+                          transactionRepository.save(createRecurrentTransaction(beginMonth, service)).subscribe(transaction -> {
+                              logger.info("Serviço "+service.description() + "da conta de id" + service.accountId()+ "Foi registrado com sucesso");
                           });
                       } else {
-                          System.out.println("Lançamento já realizado service id:"+ service.id());
+                          logger.warn("Lançamento já realizado service id:"+ service.id());
                       }
                 });
+    }
+
+    private Transaction createRecurrentTransaction(LocalDate beginMonth, Service service) {
+        return new Transaction(
+                UUID.randomUUID().toString(),
+                service.description(),
+                beginMonth,
+                service.value(),
+                "Lançado automaticamente pelo sistema",
+                service.accountId(),
+                new TransactionType("b607761c-7c57-4b0e-804b-dfccea1a2a95", ""),
+                new TransactionCategory("dccf7735-b74e-46ef-ac01-a30a5ed4f3d5", ""),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                UUID.fromString(service.id())
+        );
     }
 }

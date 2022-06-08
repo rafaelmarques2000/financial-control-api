@@ -1,6 +1,5 @@
 package com.financial.api.domain.services.repository;
 
-import com.financial.api.domain.account.model.Account;
 import com.financial.api.domain.services.model.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
