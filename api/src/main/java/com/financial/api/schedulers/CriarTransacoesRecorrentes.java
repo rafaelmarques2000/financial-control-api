@@ -37,16 +37,16 @@ public class CriarTransacoesRecorrentes {
 
         LocalDate initial = LocalDate.now();
         LocalDate beginMonth = initial.with(firstDayOfMonth());
-        LocalDate end = initial.with(lastDayOfMonth());
+        LocalDate endMonth = initial.with(lastDayOfMonth());
 
          serviceRepository.findAll().subscribe(service -> {
              if(service.recurrenceType().equals(RecurrenceType.MONTHLY)) {
-                 processMonthServices(beginMonth, end, service);
+                 processMonthServices(beginMonth, endMonth, service);
              }
          });
 
     }
-    //@TODO melhorar codigo de processamento de transações mensais
+
     private void processMonthServices(LocalDate beginMonth, LocalDate end, Service service) {
         transactionRepository.findByDateAndServiceReference(beginMonth, end, service.id())
                 .collectList().subscribe(transactions -> {
