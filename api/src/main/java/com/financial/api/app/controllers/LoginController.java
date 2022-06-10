@@ -22,6 +22,7 @@ public class LoginController {
     @Autowired
     private JwtUtils jwtUtils;
 
+
     @PostMapping(value = "/auth")
     public Mono<ResponseEntity<LoginResponse>> authenticate(@RequestBody @Validated LoginRequest loginRequest) {
         return userService
@@ -30,7 +31,7 @@ public class LoginController {
                     if(!BCriptyUtil.checkPassword(loginRequest.password(), user.password())) {
                         throw new UserNotFoundException("Usuário não encontrado");
                     }
-                    return ResponseEntity.ok().body(new LoginResponse(jwtUtils.generateJwtToken(user.id())));
+                    return ResponseEntity.ok().body(new LoginResponse(user.id(),jwtUtils.generateJwtToken(user.id())));
                 });
     }
 

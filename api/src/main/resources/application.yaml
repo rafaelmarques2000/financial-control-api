@@ -4,7 +4,8 @@ spring:
   security:
     filter:
       order: 0
-
+server:
+  port: 8085
 db_server:
   host: "localhost"
   port: "5438"
