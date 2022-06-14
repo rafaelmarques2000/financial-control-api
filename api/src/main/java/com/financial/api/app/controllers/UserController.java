@@ -31,5 +31,4 @@ public class UserController {
                 .map(user -> responseList.add(UserResponseMapper.toUserFromUserResponse(user)))
                 .then().thenReturn(ResponseEntity.ok().body(responseList));
     }
-
 }

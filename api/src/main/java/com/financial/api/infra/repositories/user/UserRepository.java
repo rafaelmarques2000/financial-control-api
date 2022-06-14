@@ -1,5 +1,6 @@
 package com.financial.api.infra.repositories.user;
 
+import com.financial.api.domain.services.enums.Status;
 import com.financial.api.domain.user.enums.UserStatus;
 import com.financial.api.domain.user.filter.UserFilter;
 import com.financial.api.domain.user.model.User;
@@ -50,11 +51,11 @@ public class UserRepository extends AbstractRepository implements IUserRepositor
         String sqlQuery = "SELECT * FROM cx_user";
 
         if(userFilter.getUsername() != null) {
-            sqlQuery+=" WHERE view_name LIKE % :username";
+            sqlQuery+=" WHERE view_name LIKE :username ";
         }
 
         return databaseClient.sql(sqlQuery)
-                .bind("username", userFilter.getUsername())
+                .bind("username", "%"+userFilter.getUsername()+"%")
                 .map(UserRowMapper.toUser())
                 .all();
     }
