@@ -77,10 +77,12 @@ public interface Queries {
             """;
 
     String FIND_ALL_TRANSACTION_TYPE_CATEGORIES = """
-                 SELECT id, description FROM cx_transaction_category WHERE transaction_type_id = :categoryId
+                 SELECT id, description FROM cx_transaction_category WHERE transaction_type_id = :transactionTypeId
             """;
 
+    String FIND_BY_SLUGNAME = "SELECT id, description FROM cx_transaction_type WHERE slugname = :slugname";
 
+    String FIND_CATEGORY_BY_SLUGNAME = "SELECT id, description FROM cx_transaction_category WHERE slugname = :slugname";
 
 
     String FIND_ALL_TRANSACTION_BY_SERVICE_REFERENCE = """

@@ -6,7 +6,9 @@ import com.financial.api.domain.services.repository.IServiceRepository;
 import com.financial.api.domain.transaction.model.Transaction;
 import com.financial.api.domain.transaction.model.TransactionCategory;
 import com.financial.api.domain.transaction.model.TransactionType;
+import com.financial.api.domain.transaction.repository.ITransactionCategoryRepository;
 import com.financial.api.domain.transaction.repository.ITransactionRepository;
+import com.financial.api.domain.transaction.repository.ITransactionTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
@@ -29,6 +32,12 @@ public class CriarTransacoesRecorrentes {
     IServiceRepository serviceRepository;
     @Autowired
     ITransactionRepository transactionRepository;
+
+    @Autowired
+    ITransactionTypeRepository transactionTypeRepository;
+
+    @Autowired
+    ITransactionCategoryRepository transactionCategoryRepository;
 
     Logger logger = LoggerFactory.getLogger(CriarTransacoesRecorrentes.class);
 
@@ -44,7 +53,6 @@ public class CriarTransacoesRecorrentes {
                  processMonthServices(beginMonth, endMonth, service);
              }
          });
-
     }
 
     private void processMonthServices(LocalDate beginMonth, LocalDate end, Service service) {
@@ -68,11 +76,19 @@ public class CriarTransacoesRecorrentes {
                 service.value(),
                 "Lançado automaticamente pelo sistema",
                 service.accountId(),
-                new TransactionType("b607761c-7c57-4b0e-804b-dfccea1a2a95", ""),
-                new TransactionCategory("dccf7735-b74e-46ef-ac01-a30a5ed4f3d5", ""),
+                getTransactionType().get(),
+                getTransactionCategory().get(),
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 UUID.fromString(service.id())
         );
+    }
+
+    private Optional<TransactionType> getTransactionType() {
+        return transactionTypeRepository.noReactiveFindBySlugname("despesa");
+    }
+
+    private Optional<TransactionCategory> getTransactionCategory() {
+        return transactionCategoryRepository.noReactiveFindBySlugname("outras_despesas");
     }
 }

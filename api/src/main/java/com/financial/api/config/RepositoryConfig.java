@@ -14,14 +14,15 @@ import com.financial.api.infra.repositories.transaction.TransactionCategoryRepos
 import com.financial.api.infra.repositories.transaction.TransactionRepository;
 import com.financial.api.infra.repositories.transaction.TransactionTypeRepository;
 import com.financial.api.infra.repositories.user.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.transaction.reactive.TransactionalOperator;
 
 @Configuration
 public class RepositoryConfig {
-
     @Bean
     public IUserRepository userRepository(DatabaseClient databaseClient, TransactionalOperator transactionalOperator) {
         return new UserRepository(databaseClient, transactionalOperator);
@@ -43,13 +44,13 @@ public class RepositoryConfig {
     }
 
     @Bean
-    public ITransactionTypeRepository transactionTypeRepository(DatabaseClient databaseClient, TransactionalOperator transactionalOperator) {
-        return new TransactionTypeRepository(databaseClient, transactionalOperator);
+    public ITransactionTypeRepository transactionTypeRepository(DatabaseClient databaseClient, TransactionalOperator transactionalOperator, JdbcTemplate jdbcTemplate) {
+        return new TransactionTypeRepository(databaseClient, transactionalOperator, jdbcTemplate);
     }
 
     @Bean
-    public ITransactionCategoryRepository transactionCategoryRepository(DatabaseClient databaseClient, TransactionalOperator transactionalOperator) {
-        return new TransactionCategoryRepository(databaseClient, transactionalOperator);
+    public ITransactionCategoryRepository transactionCategoryRepository(DatabaseClient databaseClient, TransactionalOperator transactionalOperator, JdbcTemplate jdbcTemplate) {
+        return new TransactionCategoryRepository(databaseClient, transactionalOperator, jdbcTemplate);
     }
 
     @Bean
