@@ -55,6 +55,7 @@ public class TransactionController {
 
     @GetMapping
     public Mono<ResponseEntity<?>> getAll(
+            @PathVariable String userId,
             @PathVariable String accountId,
             @RequestParam(name = "beginDate", required = false)String beginDate,
             @RequestParam(name = "endDate", required = false) String endDate,
@@ -64,7 +65,7 @@ public class TransactionController {
 
         List<TransactionResponse> responseList = new ArrayList<>();
         return transactionService
-                .findAll(accountId, (new TransactionFilter()).formatParams(beginDate, endDate, categoryId, typeId))
+                .findAll(userId,accountId, (new TransactionFilter()).formatParams(beginDate, endDate, categoryId, typeId))
                 .map(transaction -> responseList.add(TransactionMapper.fromTransactionToTransactionResponse(transaction)))
                 .then().thenReturn(ResponseEntity.ok().body(responseList));
     }

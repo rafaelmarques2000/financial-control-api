@@ -63,16 +63,24 @@ public class TransactionRepository extends AbstractRepository implements ITransa
     }
 
     @Override
-    public Flux<Transaction> findAll(String accountId, TransactionFilter filter) {
+    public Flux<Transaction> findAll(String userId, String accountId, TransactionFilter filter) {
 
         if(!filter.hasFilter()) {
-            return databaseClient.sql(Queries.FIND_ALL_TRANSACTION_BY_ACCOUNT)
-                    .bind("accountId", accountId)
+            if(accountId != null) {
+                return databaseClient.sql(Queries.FIND_ALL_TRANSACTION_BY_ACCOUNT)
+                        .bind("accountId", accountId)
+                        .bind("userId", userId)
+                        .map(TransactionRowMapper.toTransaction())
+                        .all();
+            }
+
+            return databaseClient.sql(Queries.FIND_ALL_TRANSACTION_BY_USER_ACCOUNTS)
+                    .bind("userId", userId)
                     .map(TransactionRowMapper.toTransaction())
                     .all();
         }
 
-        String sql = Queries.FIND_ALL_TRANSACTION_BY_ACCOUNT;
+        String sql = accountId != null ? Queries.FIND_ALL_TRANSACTION_BY_ACCOUNT : Queries.FIND_ALL_TRANSACTION_BY_USER_ACCOUNTS;
 
         if(filter.getBeginDate() != null) {
             sql = sql.concat(" AND t.date BETWEEN :beginDate AND :endDate");
@@ -86,7 +94,7 @@ public class TransactionRepository extends AbstractRepository implements ITransa
             sql = sql.concat(" AND ctt.id::text = :typeId");
         }
 
-        return getAllTransactionByFilter(accountId, filter, sql);
+        return getAllTransactionByFilter(userId, accountId, filter, sql);
     }
 
     @Override
@@ -108,10 +116,14 @@ public class TransactionRepository extends AbstractRepository implements ITransa
                 .all();
     }
 
-    private Flux<Transaction> getAllTransactionByFilter(String accountId, TransactionFilter filter, String sql) {
+    private Flux<Transaction> getAllTransactionByFilter(String userId, String accountId, TransactionFilter filter, String sql) {
 
         DatabaseClient.GenericExecuteSpec sqlClient = databaseClient.sql(sql)
-                .bind("accountId", accountId);
+                .bind("userId", userId);
+
+        if(accountId != null) {
+             sqlClient = sqlClient.bind("accountId", accountId);
+        }
 
         if(filter.getBeginDate() != null) {
             sqlClient = sqlClient

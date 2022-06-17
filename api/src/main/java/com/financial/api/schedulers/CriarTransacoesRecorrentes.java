@@ -43,15 +43,12 @@ public class CriarTransacoesRecorrentes {
 
     @Scheduled(cron = "1 * * * * *", zone = TIME_ZONE)
     public void efetuarLancamento() {
-
         LocalDate initial = LocalDate.now();
         LocalDate beginMonth = initial.with(firstDayOfMonth());
         LocalDate endMonth = initial.with(lastDayOfMonth());
 
          serviceRepository.findAll().subscribe(service -> {
-             if(service.recurrenceType().equals(RecurrenceType.MONTHLY)) {
-                 processMonthServices(beginMonth, endMonth, service);
-             }
+             processMonthServices(beginMonth, endMonth, service);
          });
     }
 

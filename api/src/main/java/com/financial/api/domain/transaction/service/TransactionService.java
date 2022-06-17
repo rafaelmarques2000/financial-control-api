@@ -39,9 +39,9 @@ public class TransactionService implements ITransactionService{
     }
 
     @Override
-    public Flux<Transaction> findAll(String accountId, TransactionFilter filter) {
+    public Flux<Transaction> findAll(String userId, String accountId, TransactionFilter filter) {
         return transactionRepository
-                .findAll(accountId, filter);
+                .findAll(userId, accountId, filter);
     }
 
     @Override

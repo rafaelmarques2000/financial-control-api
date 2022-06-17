@@ -9,6 +9,6 @@ public interface ITransactionService {
     Mono<Transaction> save(Transaction transaction);
     Mono<Transaction> update(Transaction transaction);
     Mono<Void> delete(String accountId, String transactionId);
-    Flux<Transaction> findAll(String accountId, TransactionFilter filter);
+    Flux<Transaction> findAll(String userId, String accountId, TransactionFilter filter);
     Mono<Transaction> findById(String accountId, String transactionId);
 }

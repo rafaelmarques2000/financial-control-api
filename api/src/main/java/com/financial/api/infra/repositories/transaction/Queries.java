@@ -49,23 +49,25 @@ public interface Queries {
             """;
 
     String FIND_ALL_TRANSACTION_BY_ACCOUNT = """
-                SELECT t.id,
-                       t.description,
-                       t.date,
-                       t.value,
-                       t.extra_description,
-                       t.account_id,
-                       ctt.id as type_id,
-                       ctt.description as type,
-                       tc.id as category_id,
-                       tc.description as category,
-                       t.created_at,
-                       t.updated_at
+                    SELECT t.id,
+                           t.description,
+                           t.date,
+                           t.value,
+                           t.extra_description,
+                           t.account_id,
+                           ctt.id as type_id,
+                           ctt.description as type,
+                           tc.id as category_id,
+                           tc.description as category,
+                           t.created_at,
+                           t.updated_at
                     from cx_account_transaction t
-                    join cx_accounts ca on t.account_id = ca.id
-                    join cx_transaction_type ctt on t.transaction_type_id = ctt.id
-                    join cx_transaction_category tc on t.transaction_category_id = tc.id
+                             join cx_accounts ca on t.account_id = ca.id
+                             join cx_transaction_type ctt on t.transaction_type_id = ctt.id
+                             join cx_transaction_category tc on t.transaction_category_id = tc.id
+                             join cx_user_accounts cua on ca.id = cua.account_id
                     where t.account_id::text = :accountId AND t.deleted_at is null
+                    AND cua.user_id::text = :userId
             """;
 
     String FIND_BY_TRANSACTION_ID = FIND_ALL_TRANSACTION_BY_ACCOUNT+" AND t.id::text=:transactionId";
@@ -110,20 +112,24 @@ public interface Queries {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    String FIND_ALL_TRANSACTION_BY_USER_ACCOUNTS = """
+                SELECT t.id,
+                       t.description,
+                       t.date,
+                       t.value,
+                       t.extra_description,
+                       t.account_id,
+                       ctt.id as type_id,
+                       ctt.description as type,
+                       tc.id as category_id,
+                       tc.description as category,
+                       t.created_at,
+                       t.updated_at
+                from cx_account_transaction t
+                         join cx_accounts ca on t.account_id = ca.id
+                         join cx_transaction_type ctt on t.transaction_type_id = ctt.id
+                         join cx_transaction_category tc on t.transaction_category_id = tc.id
+                         join cx_user_accounts cua on ca.id = cua.account_id
+                where t.deleted_at is null AND cua.user_id::text = :userId
+            """;
 }
