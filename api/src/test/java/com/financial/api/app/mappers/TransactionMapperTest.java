@@ -79,7 +79,8 @@ public class TransactionMapperTest {
               transactionType,
               transactionCategory,
               createdOrUpdatedAt,
-              createdOrUpdatedAt
+              createdOrUpdatedAt,
+                null
         );
         //WHEN
         TransactionResponse transactionResponse = TransactionMapper.fromTransactionToTransactionResponse(transaction);
