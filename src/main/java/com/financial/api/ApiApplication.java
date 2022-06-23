@@ -1,6 +1,5 @@
 package com.financial.api;
 
-import com.financial.api.app.utils.BCriptyUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
