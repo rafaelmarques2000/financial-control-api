@@ -39,3 +39,21 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+    deploy_ec2:
+      needs: build_and_push_dockerhub
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/checkout@v2
+        - name: Deploy in EC2
+          env:
+            PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+            HOSTNAME: ${{ secrets.AWS_HOSTNAME  }}
+            USER_NAME: ${{ secrets.AWS_USERNAME  }}
+
+          run: |
+            echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+            ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+              cd /home/ubuntu &&
+              sh deploy_frontend.sh ${{secrets.DOCKERHUB_LOGIN}} ${{secrets.DOCKERHUB_PASSWORD}} financial-api backend
+            '
