@@ -5,7 +5,7 @@ spring:
     filter:
       order: 0
 server:
-  port: 8086
+  port: 8085
 db_server:
   host: "ec2-3-238-163-4.compute-1.amazonaws.com"
   port: "5432"
