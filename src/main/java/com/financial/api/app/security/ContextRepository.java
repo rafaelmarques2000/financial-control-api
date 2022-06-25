@@ -32,7 +32,6 @@ public class ContextRepository implements ServerSecurityContextRepository {
         ServerHttpRequest request = swe.getRequest();
         String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         String authToken = null;
-
         if (authHeader != null && authHeader.startsWith(TOKEN_PREFIX)) {
             authToken = authHeader.replace(TOKEN_PREFIX, "");
             Authentication auth = new UsernamePasswordAuthenticationToken(authToken, authToken);

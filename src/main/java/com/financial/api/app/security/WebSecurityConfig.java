@@ -32,8 +32,10 @@ public class WebSecurityConfig {
         return http.cors().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint((swe, e) -> Mono.fromRunnable(() -> {
+                    swe.getResponse().getHeaders().add("Access-Control-Allow-Origin", "*");
                     swe.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 })).accessDeniedHandler((swe, e) -> Mono.fromRunnable(() -> {
+                    swe.getResponse().getHeaders().add("Access-Control-Allow-Origin", "*");
                     swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
                 })).and()
                 .csrf().disable()
