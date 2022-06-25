@@ -10,8 +10,6 @@ db_server:
   host: "ec2-3-238-163-4.compute-1.amazonaws.com"
   port: "5432"
   database: "financial_api"
-  username: "postgres"
-  password: "1354a52azeus%$#@"
 
 jwt_secret: MjE5dzhzZDlhZDg5c2FkOGE5c2Q4czlhZDhhczllODUyMTk4cnEzOTQ4OXc4OXc4ZWQ5ZDhhOWQ4YTk0ODI5KnI4dGc5ZHQ4NTk=
 jwt_expiration: 120
