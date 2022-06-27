@@ -7,9 +7,11 @@ spring:
 server:
   port: 8086
 db_server:
-  host: "ec2-3-238-163-4.compute-1.amazonaws.com"
-  port: "5432"
+  host: "localhost"
+  port: "5438"
   database: "financial_api"
+  username: root
+  password: root
 
 jwt_secret: MjE5dzhzZDlhZDg5c2FkOGE5c2Q4czlhZDhhczllODUyMTk4cnEzOTQ4OXc4OXc4ZWQ5ZDhhOWQ4YTk0ODI5KnI4dGc5ZHQ4NTk=
 jwt_expiration: 120
