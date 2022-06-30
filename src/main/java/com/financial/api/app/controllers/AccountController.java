@@ -6,6 +6,7 @@ import com.financial.api.app.requests.AccountShareRequest;
 import com.financial.api.app.responses.AccountResponse;
 import com.financial.api.app.responses.AccountShareUserResponse;
 import com.financial.api.app.responses.SuccessResponse;
+import com.financial.api.domain.account.filter.AccountFilter;
 import com.financial.api.domain.account.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,9 +26,10 @@ public class AccountController {
     private IAccountService accountService;
 
     @GetMapping
-    public Mono<ResponseEntity<?>> getAll(@PathVariable String userId) {
+    public Mono<ResponseEntity<?>> getAll(@PathVariable String userId, @RequestParam(name = "description", required = false) String description) {
         List<AccountResponse> responseList = new ArrayList<>();
-        return accountService.findAll(userId)
+        AccountFilter filter = new AccountFilter(description);
+        return accountService.findAll(userId, filter)
                 .map(account -> responseList.add(AccountMapper.toAccountFromAccountResponse(account)))
                 .then()
                 .thenReturn(ResponseEntity.ok().body(responseList));

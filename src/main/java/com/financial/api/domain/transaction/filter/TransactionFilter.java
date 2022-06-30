@@ -1,22 +1,23 @@
 package com.financial.api.domain.transaction.filter;
 
+import com.financial.api.domain.global.interfaces.IFilter;
+
 import java.time.LocalDate;
 
-public class TransactionFilter {
+public class TransactionFilter implements IFilter {
 
-    private LocalDate beginDate;
-    private LocalDate endDate;
+    private final LocalDate beginDate;
+    private final LocalDate endDate;
 
-    private String categoryId;
+    private final String categoryId;
 
-    private String typeId;
+    private final String typeId;
 
-    public TransactionFilter formatParams(String beginDate, String endDate, String categoryId, String typeId) {
+    public TransactionFilter(String beginDate, String endDate, String categoryId, String typeId) {
         this.beginDate = beginDate != null ? LocalDate.parse(beginDate) : null;
         this.endDate = endDate != null ? LocalDate.parse(endDate) : null;
         this.categoryId = categoryId;
         this.typeId = typeId;
-        return this;
     }
 
     public boolean hasFilter() {

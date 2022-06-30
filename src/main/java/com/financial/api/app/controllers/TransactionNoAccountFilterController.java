@@ -30,7 +30,7 @@ public class TransactionNoAccountFilterController {
 
         List<TransactionResponse> responseList = new ArrayList<>();
         return transactionService
-                .findAll(userId,null, (new TransactionFilter()).formatParams(beginDate, endDate, categoryId, typeId))
+                .findAll(userId,null, new TransactionFilter(beginDate, endDate, categoryId, typeId))
                 .map(transaction -> responseList.add(TransactionMapper.fromTransactionToTransactionResponse(transaction)))
                 .then().thenReturn(ResponseEntity.ok().body(responseList));
     }

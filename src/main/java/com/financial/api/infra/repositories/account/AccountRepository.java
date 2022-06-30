@@ -1,6 +1,8 @@
 package com.financial.api.infra.repositories.account;
+import com.financial.api.domain.account.filter.AccountFilter;
 import com.financial.api.domain.account.model.Account;
 import com.financial.api.domain.account.repository.IAccountRepository;
+import com.financial.api.domain.global.interfaces.IFilter;
 import com.financial.api.infra.repositories.AbstractRepository;
 import com.financial.api.infra.repositories.account.Queries;
 import com.financial.api.infra.repositories.account.mapper.AccountRowMapper;
@@ -59,8 +61,23 @@ public class AccountRepository extends AbstractRepository implements IAccountRep
     }
 
     @Override
-    public Flux<Account> findAll(String userId) {
-        return databaseClient.sql(Queries.FIND_ALL_ACCOUNTS_BY_USER)
+    public Flux<Account> findAll(String userId, AccountFilter accountFilter) {
+
+        if(!accountFilter.hasFilter()) {
+            return databaseClient.sql(Queries.FIND_ALL_ACCOUNTS_BY_USER)
+                    .bind("userId", userId)
+                    .map(AccountRowMapper.toAccount())
+                    .all();
+        }
+
+        String sql = Queries.FIND_ALL_ACCOUNTS_BY_USER;
+
+        if(accountFilter.getDescription() != null) {
+            sql+="AND a.description LIKE :description";
+        }
+
+        return databaseClient.sql(sql)
+                .bind("description", "%"+accountFilter.getDescription()+"%")
                 .bind("userId", userId)
                 .map(AccountRowMapper.toAccount())
                 .all();

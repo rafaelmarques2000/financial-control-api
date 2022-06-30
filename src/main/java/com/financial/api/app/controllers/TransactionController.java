@@ -65,7 +65,7 @@ public class TransactionController {
 
         List<TransactionResponse> responseList = new ArrayList<>();
         return transactionService
-                .findAll(userId,accountId, (new TransactionFilter()).formatParams(beginDate, endDate, categoryId, typeId))
+                .findAll(userId,accountId, new TransactionFilter(beginDate, endDate, categoryId, typeId))
                 .map(transaction -> responseList.add(TransactionMapper.fromTransactionToTransactionResponse(transaction)))
                 .then().thenReturn(ResponseEntity.ok().body(responseList));
     }

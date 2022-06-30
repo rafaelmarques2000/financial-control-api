@@ -2,8 +2,8 @@ package com.financial.api.app.exceptions;
 
 import com.financial.api.app.responses.ErrorResponse;
 import com.financial.api.app.responses.ValidationErrorResponse;
-import com.financial.api.domain.exceptions.IlegalOperationException;
-import com.financial.api.domain.exceptions.NotFoundException;
+import com.financial.api.domain.global.exceptions.IlegalOperationException;
+import com.financial.api.domain.global.exceptions.NotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
