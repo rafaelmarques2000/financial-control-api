@@ -1,17 +1,17 @@
 package com.financial.api.infra.repositories.account;
 import com.financial.api.domain.account.filter.AccountFilter;
 import com.financial.api.domain.account.model.Account;
+import com.financial.api.domain.account.model.AccountPaginationResult;
 import com.financial.api.domain.account.repository.IAccountRepository;
-import com.financial.api.domain.global.interfaces.IFilter;
 import com.financial.api.infra.repositories.AbstractRepository;
-import com.financial.api.infra.repositories.account.Queries;
 import com.financial.api.infra.repositories.account.mapper.AccountRowMapper;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.transaction.reactive.TransactionalOperator;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.UUID;
 
 
@@ -61,26 +61,67 @@ public class AccountRepository extends AbstractRepository implements IAccountRep
     }
 
     @Override
-    public Flux<Account> findAll(String userId, AccountFilter accountFilter) {
+    public Mono<AccountPaginationResult> findAll(String userId, AccountFilter accountFilter) {
+
+        AccountPaginationResult paginatedAccount = new AccountPaginationResult();
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("userId", userId);
 
         if(!accountFilter.hasFilter()) {
-            return databaseClient.sql(Queries.FIND_ALL_ACCOUNTS_BY_USER)
-                    .bind("userId", userId)
-                    .map(AccountRowMapper.toAccount())
-                    .all();
+            return getCountTotal(Queries.GET_COUNT_ACCOUNTS_BY_USER, params, "total")
+                    .map(total -> {
+                        var sql = Queries.FIND_ALL_ACCOUNTS_BY_USER + " LIMIT :limit OFFSET :offset";
+                        paginatedAccount.setTotalPage(calculateTotalPages(total, accountFilter.size()));
+                        paginatedAccount.setPage(accountFilter.page());
+                        return databaseClient.sql(sql)
+                        .bind("userId", userId)
+                        .bind("limit", accountFilter.size())
+                        .bind("offset", calculateOffSetPagination(accountFilter.size(), accountFilter.page()))
+                        .map(AccountRowMapper.toAccount())
+                        .all().collectList();
+                    })
+                    .publishOn(Schedulers.boundedElastic()).mapNotNull(listAccounts -> {
+                        paginatedAccount.setItems(listAccounts.block());
+                        return null;
+                    })
+                    .thenReturn(paginatedAccount);
         }
 
         String sql = Queries.FIND_ALL_ACCOUNTS_BY_USER;
+        String sqlCount = Queries.GET_COUNT_ACCOUNTS_BY_USER;
 
-        if(accountFilter.getDescription() != null) {
-            sql+="AND a.description LIKE :description";
+        if(accountFilter.description() != null) {
+            sqlCount += " AND a.description LIKE :description";
+            sql+=" AND a.description LIKE :description";
         }
 
-        return databaseClient.sql(sql)
-                .bind("description", "%"+accountFilter.getDescription()+"%")
-                .bind("userId", userId)
-                .map(AccountRowMapper.toAccount())
-                .all();
+        sql+= " LIMIT :limit OFFSET :offset";
+
+        DatabaseClient.GenericExecuteSpec client = databaseClient.sql(sql);
+
+        if(accountFilter.description() != null) {
+            params.put("description", "%"+accountFilter.description()+"%");
+            client = client.bind("description", "%"+accountFilter.description()+"%");
+        }
+
+        DatabaseClient.GenericExecuteSpec finalClient = client;
+
+        return getCountTotal(sqlCount, params, "total")
+                .map(total -> {
+                    paginatedAccount.setTotalPage(calculateTotalPages(total, accountFilter.size()));
+                    paginatedAccount.setPage(accountFilter.page());
+                    return finalClient
+                            .bind("userId", userId)
+                            .bind("limit", accountFilter.size())
+                            .bind("offset", calculateOffSetPagination(accountFilter.size(), accountFilter.page()))
+                            .map(AccountRowMapper.toAccount())
+                            .all().collectList();
+                }).publishOn(Schedulers.boundedElastic()).mapNotNull(listAccounts -> {
+                    paginatedAccount.setItems(listAccounts.block());
+                    return null;
+                })
+                .thenReturn(paginatedAccount);
     }
 
     @Override

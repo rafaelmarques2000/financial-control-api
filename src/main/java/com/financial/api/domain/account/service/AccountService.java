@@ -4,6 +4,7 @@ import com.financial.api.domain.account.exception.AccountNotFoundException;
 import com.financial.api.domain.account.exception.IlegalAccountOperationException;
 import com.financial.api.domain.account.filter.AccountFilter;
 import com.financial.api.domain.account.model.Account;
+import com.financial.api.domain.account.model.AccountPaginationResult;
 import com.financial.api.domain.account.repository.IAccountRepository;
 import com.financial.api.domain.accountUser.model.AccountShareUser;
 import com.financial.api.domain.accountUser.repository.IAccountUserRepository;
@@ -60,7 +61,7 @@ public class AccountService implements IAccountService{
     }
 
     @Override
-    public Flux<Account> findAll(String userId, AccountFilter accountFilter) {
+    public Mono<AccountPaginationResult> findAll(String userId, AccountFilter accountFilter) {
         return accountRepository.findAll(userId, accountFilter);
     }
 

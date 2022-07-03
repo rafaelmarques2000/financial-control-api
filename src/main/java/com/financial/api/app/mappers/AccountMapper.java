@@ -3,14 +3,13 @@ package com.financial.api.app.mappers;
 import com.financial.api.app.requests.AccountRequest;
 import com.financial.api.app.responses.AccountResponse;
 import com.financial.api.app.responses.AccountShareUserResponse;
-import com.financial.api.app.responses.UserResponse;
+import com.financial.api.app.responses.PaginatedAccountResponse;
 import com.financial.api.domain.account.enums.AccountType;
 import com.financial.api.domain.account.model.Account;
+import com.financial.api.domain.account.model.AccountPaginationResult;
 import com.financial.api.domain.accountUser.model.AccountShareUser;
-import com.financial.api.domain.user.model.User;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 public class AccountMapper {
@@ -38,6 +37,15 @@ public class AccountMapper {
                 account.updatedAt()
         );
     }
+
+    public static PaginatedAccountResponse toPaginatedAccountFromAccountPaginatedAccountResponse(AccountPaginationResult paginatedAccount) {
+        return new PaginatedAccountResponse(
+                paginatedAccount.getTotalPage().intValue(),
+                paginatedAccount.getPage(),
+                paginatedAccount.getItems()
+        );
+    }
+
 
     public static AccountShareUserResponse toAccountSharedUserFromAccountSharedUserResponse(AccountShareUser accountShareUser) {
          return new AccountShareUserResponse(

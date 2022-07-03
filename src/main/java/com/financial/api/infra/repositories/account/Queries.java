@@ -27,6 +27,15 @@ public interface Queries {
                         WHERE cxu.id::text = :userId AND a.deleted_at is null
             """;
 
+    String GET_COUNT_ACCOUNTS_BY_USER = """
+                 SELECT COUNT(a.id) as total
+                        FROM CX_ACCOUNTS a
+                        JOIN cx_user_accounts cua on a.id = cua.account_id
+                        JOIN cx_user cxu on cua.user_id = cxu.id
+                        WHERE cxu.id::text = :userId AND a.deleted_at is null
+          
+            """;
+
     String FIND_BY_ACCOUNT_ID = FIND_ALL_ACCOUNTS_BY_USER + "AND a.id::text=:accountId";
 
 }

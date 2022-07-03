@@ -26,13 +26,15 @@ public class AccountController {
     private IAccountService accountService;
 
     @GetMapping
-    public Mono<ResponseEntity<?>> getAll(@PathVariable String userId, @RequestParam(name = "description", required = false) String description) {
-        List<AccountResponse> responseList = new ArrayList<>();
-        AccountFilter filter = new AccountFilter(description);
+    public Mono<ResponseEntity<?>> getAll(
+            @PathVariable String userId,
+            @RequestParam(name = "description", required = false) String description,
+            @RequestParam(name = "size") Integer size,
+            @RequestParam(name = "page") Integer page
+            ) {
+        AccountFilter filter = new AccountFilter(description, size, page);
         return accountService.findAll(userId, filter)
-                .map(account -> responseList.add(AccountMapper.toAccountFromAccountResponse(account)))
-                .then()
-                .thenReturn(ResponseEntity.ok().body(responseList));
+                .map(paginatedAccount -> ResponseEntity.ok().body(AccountMapper.toPaginatedAccountFromAccountPaginatedAccountResponse(paginatedAccount)));
     }
 
     @GetMapping(value = "/{accountId}")
